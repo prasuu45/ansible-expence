@@ -28,8 +28,4 @@
     ansible.builtin.debug:
       msg: "{{ mysql_info }}"
 
-  - name: ansible to install python
-    ansible.builtin.pip:
-     name:
-     - PyMySQL
-    executable: pip3.9
+  
