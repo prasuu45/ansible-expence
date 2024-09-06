@@ -1,0 +1,30 @@
+- name: create ec2_instances
+  hosts: local
+  connection: local
+  vars:
+    instances:
+    - mysql
+    - backend
+    - frontend
+    zone: hinatadream.online
+  tasks:
+  - name: ansible to install boto3 and botocore
+    ansible.builtin.pip:
+      name:
+      - boto3
+      - botocore
+      executable: pip3.9
+
+  - name: create ec2-instances
+    amazon.aws.ec2_instance:
+      name: "{{ item }}"
+      vpc_subnet_id: subnet-0ec13a90059067f89
+      instance_type: t3.micro
+      security_group: sg-02c4c043a85fe8c60
+      image_id: ami-09c813fb71547fc4f
+    loop: "{{ instances }}"
+    register: ec2_instances
+
+  - name: print the output
+    ansible.builtin.debug:
+      msg: "{{ ec2_instances }}"
