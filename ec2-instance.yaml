@@ -1,7 +1,12 @@
-- name: create ec2_instances
+- name: create ec2 and r53 records
   hosts: local
   connection: local
+  # assignment
+  # move this to vars_files
   vars:
+    subnet_id: subnet-0ec13a90059067f89  # replace with your subnet id
+    sg_id: "sg-02c4c043a85fe8c60"
+    ami_id: "ami-09c813fb71547fc4f"
     instances:
     - mysql
     - backend
@@ -14,14 +19,13 @@
       - boto3
       - botocore
       executable: pip3.9
-
-  - name: create ec2-instances
+  - name: create ec2 instance
     amazon.aws.ec2_instance:
       name: "{{ item }}"
-      vpc_subnet_id: subnet-0ec13a90059067f89
-      instance_type: t3.micro
-      security_group: sg-02c4c043a85fe8c60
-      image_id: ami-09c813fb71547fc4f
+      vpc_subnet_id: "{{ subnet_id }}"
+      instance_type: "t3.micro"
+      security_group: "{{ sg_id }}"
+      image_id: "{{ ami_id }}"
     loop: "{{ instances }}"
     register: ec2_instances
 
